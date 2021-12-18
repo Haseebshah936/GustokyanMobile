@@ -8,6 +8,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { LoginContext } from "../../App";
 import ResturantStackNavigator from "./ResturantStackNavigator";
+import { auth } from "../../Config/Firebase";
 
 const Drawer = createDrawerNavigator();
 
@@ -21,7 +22,7 @@ export default function DrawerNavigator() {
         return (
           <DrawerContentScrollView {...props}>
             <DrawerItemList {...props} />
-            <DrawerItem label="Logout" onPress={() => setLogin(false)} />
+            <DrawerItem label="Logout" onPress={() => auth.signOut()} />
           </DrawerContentScrollView>
         );
       }}

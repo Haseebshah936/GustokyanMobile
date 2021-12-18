@@ -25,29 +25,38 @@ import styles from "../Style/styles";
 
 import color from "../Style/color";
 import { LoginContext } from "../../App";
+import { auth } from "../../Config/Firebase";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
-  password: Yup.string().required().min(8).label("Password"),
+  password: Yup.string().required().label("Password"),
 });
 
 function LoginForm({ navigation }) {
   const [email, setEmail] = useState("");
   const [visible, setVisible] = useState(false);
   const [login, setLogin] = useContext(LoginContext);
-  // const sendResetEmail = (email) => {
-  //   auth
-  //     .sendPasswordResetEmail(email)
-  //     .then(() => {
-  //       alert("Password reset email sent");
-  //       // ..
-  //     })
-  //     .catch((error) => {
-  //       var errorCode = error.code;
-  //       var errorMessage = error.message;
-  //       // ..
-  //     });
-  // };
+  const sendResetEmail = (email) => {
+    auth
+      .sendPasswordResetEmail(email)
+      .then(() => {
+        alert("Password reset email sent");
+        // ..
+      })
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // ..
+      });
+  };
+  const handleSubmit = (email, password) => {
+    auth
+      .signInWithEmailAndPassword(email, password)
+      .then((userCredential) => {})
+      .catch((error) => {
+        alert(error.code);
+      });
+  };
 
   return (
     <Pressable onPress={Keyboard.dismiss} style={styles.container}>
@@ -62,7 +71,7 @@ function LoginForm({ navigation }) {
         <View style={{ width: "100%" }}>
           <Formik
             initialValues={{ email: "", password: "" }}
-            onSubmit={(values) => setLogin(true)}
+            onSubmit={(values) => handleSubmit(values.email, values.password)}
             validationSchema={validationSchema}
           >
             {({
@@ -140,7 +149,7 @@ function LoginForm({ navigation }) {
           </Formik>
         </View>
       </View>
-      <View style={styles.buttonContainer}>
+      {/* <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.googleLogin}
           activeOpacity={0.6}
@@ -152,7 +161,7 @@ function LoginForm({ navigation }) {
           />
           <Text style={styles.googleText}>Sign in with Google</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
       <TouchableOpacity style={[styles.loginTextBottomContainer]}>
         <Text
           style={[styles.signupText]}
@@ -212,7 +221,7 @@ function LoginForm({ navigation }) {
                   sendResetEmail(email);
                 }}
               >
-                <Text style={styl.modalText}>Submit</Text>
+                <Text style={styl.modalText}>Send</Text>
               </TouchableHighlight>
             </View>
           </View>

@@ -24,7 +24,9 @@ import ErrorMessage from "./ErrorMessage";
 import styles from "../Style/stylesRegister";
 // import { auth, phoneAuthProvider, phoneProvider } from "../../firebase";
 import Constants from "expo-constants";
+import firebase from "firebase";
 import color from "../Style/color";
+import { auth, db, storage } from "../../Config/Firebase";
 // import { firebaseConfig } from "../../APIKeys";
 // import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 
@@ -39,56 +41,46 @@ const hold =
 
 function RegisterForm({ navigation }) {
   const [uri, setUri] = useState(false);
-  // const store = useSelector((state) => state);
-  // const dispatch = useDispatch();
-  // let uri = store.Reducer.profilePic;
-  // const [visible, setVisible] = useState(false);
-  // const [verificationCode, setVerificationCode] = useState();
-  // const [verificationId, setVerificationId] = useState();
-  // const [message, showMessage] = useState();
-  // const recaptchaVerifier = useRef(null);
-  // const [val, setVal] = useState();
-  // const [phoneNumber, setPhoneNumber] = useState("");
-  // const sendVerificationCode = async (phoneNumber) => {
-  //   try {
-  //     // console.log("Phone", phoneNumber);
-  //     const verificationId = await phoneProvider.verifyPhoneNumber(
-  //       phoneNumber,
-  //       recaptchaVerifier.current
-  //     );
-  //     // console.log("Verification" + verificationId);
-  //     setVerificationId(verificationId);
-  //     showMessage("Verification code has been sent to your phone.");
-  //   } catch (err) {
-  //     // console.log(err);
-  //     showMessage(`Error: ${err.message}`);
-  //   }
-  // };
-  // const confirmVerification = async () => {
-  //   try {
-  //     const credential = phoneAuthProvider.credential(
-  //       verificationId,
-  //       verificationCode
-  //     );
-  //     // console.log(credential);
-  //     dispatch(
-  //       register(val.email, val.password, val.userName, uri, credential)
-  //     );
-  //     showMessage("Phone authentication successful 👍");
-  //     setVisible(!visible);
-  //   } catch (err) {
-  //     showMessage(`Error: ${err.message}`);
-  //   }
-  // };
-  // const submit = async (values) => {
-  //   if (values.phoneNo) {
-  //     setVisible(true);
-  //     setPhoneNumber(values.phoneNo);
-  //     await sendVerificationCode(values.phoneNo);
-  //   } else {
-  //     dispatch(register(values.email, values.password, values.userName, uri));
-  //   }
-  // };
+
+  const uploadImage = async (id) => {
+    if (uri) {
+      const response = await fetch(uri);
+      const blob = await response.blob();
+      let ref = storage.ref().child("ProfileImages/" + id + id);
+      await ref.put(blob);
+      return ref.getDownloadURL();
+    }
+    return "../../assets/holder.png";
+  };
+
+  const handleSubmit = (email, userName, password) => {
+    auth
+      .createUserWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        id = userCredential.user.uid;
+        uploadImage(id).then((url) => {
+          db.collection("users")
+            .doc(id)
+            .set({
+              name: userName,
+              photo: url,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+              id,
+            })
+            .then(() => {
+              console.log("Document successfully written!");
+              auth.signOut();
+            })
+            .catch((error) => {
+              console.error("Error writing document: ", error);
+            });
+          navigation.navigate("Login");
+        });
+      })
+      .catch((error) => {
+        alert(error.code);
+      });
+  };
   return (
     <Pressable onPress={() => Keyboard.dismiss()} style={styles.container}>
       <>
@@ -101,12 +93,9 @@ function RegisterForm({ navigation }) {
               userName: "",
               email: "",
               password: "",
-              phoneNo: "",
-              address: "",
             }}
             onSubmit={(values) => {
-              // setVal(values);
-              // submit(values);
+              handleSubmit(values.email, values.userName, values.password);
             }}
             validationSchema={validationSchema}
           >
@@ -127,7 +116,7 @@ function RegisterForm({ navigation }) {
                         const { cancelled, uri } =
                           await ImagePicker.launchImageLibraryAsync({
                             mediaTypes: ImagePicker.MediaTypeOptions.Images,
-                            quality: 0.2,
+                            quality: 0.1,
                           });
                         if (!cancelled) {
                           setUri(uri);

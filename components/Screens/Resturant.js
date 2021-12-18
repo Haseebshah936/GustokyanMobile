@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useContext } from "react";
 import {
   Image,
   StyleSheet,
@@ -7,7 +7,11 @@ import {
   TouchableOpacity,
   View,
   Linking,
+  Alert,
 } from "react-native";
+import { AirbnbRating, Rating } from "react-native-ratings";
+import { setDisabled } from "react-native/Libraries/LogBox/Data/LogBoxData";
+import { CartContext, Categories, ResturantIdContext } from "../../App";
 import color from "../Style/color";
 
 export default function Resturant({
@@ -15,13 +19,56 @@ export default function Resturant({
   logo = "",
   location = "",
   ResturantName = "",
+  rating = 3,
+  categories,
 }) {
   const navigation = useNavigation();
+  const [rid, setRID] = useContext(ResturantIdContext);
+  const [cart, setCart] = useContext(CartContext);
+  const [category, setCategory] = useContext(Categories);
   return (
     <View style={styles.container}>
       <TouchableOpacity
         activeOpacity={0.8}
-        onPress={() => navigation.navigate("Menu")}
+        onPress={() => {
+          if (
+            cart?.id !== id &&
+            cart?.id !== "" &&
+            cart?.products.length !== 0
+          ) {
+            Alert.alert(
+              "Confirmation",
+              "All the item in the cart will be removed",
+              [
+                { text: "cancel" },
+                {
+                  text: "OK",
+                  onPress: () => {
+                    navigation.navigate("Menu");
+                    setRID({ id, ResturantName });
+                    setCart({ id, products: [], total: 0 });
+                    setCategory(
+                      categories.map((c) => ({
+                        label: c,
+                        value: c,
+                      }))
+                    );
+                  },
+                },
+              ]
+            );
+          } else {
+            navigation.navigate("Menu");
+            setCategory(
+              categories.map((c, i) => ({
+                label: c,
+                value: c,
+              }))
+            );
+            setRID({ id, ResturantName });
+            setCart({ ...cart, id });
+          }
+        }}
       >
         <Image
           style={styles.logo}
@@ -29,8 +76,9 @@ export default function Resturant({
         />
       </TouchableOpacity>
       <View style={styles.subContainer}>
-        <View>
+        <View style={{ alignItems: "flex-start" }}>
           <Text style={styles.resturnatName}>{ResturantName}</Text>
+          <Rating readonly startingValue={rating} imageSize={15} />
         </View>
         <TouchableOpacity
           style={styles.locationBtn}
@@ -73,11 +121,12 @@ const styles = StyleSheet.create({
   resturnatName: {
     color: "black",
     fontWeight: "bold",
-    fontSize: 15,
+    fontSize: 18,
+    marginBottom: 2,
   },
   locationBtn: {
-    paddingVertical: 8,
-    paddingHorizontal: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 15,
     backgroundColor: color.primary,
     borderRadius: 10,
   },
