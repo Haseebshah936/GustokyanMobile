@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, CheckBox } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+import CheckBox from "react-native-check-box";
 import color from "../Style/color";
 
 const Extra = ({ id, name, price, handleSelection = () => {} }) => {
@@ -32,12 +33,12 @@ const Extra = ({ id, name, price, handleSelection = () => {} }) => {
       </View>
       <Text>₱ {price}</Text>
       <CheckBox
-        value={isSelected}
-        onValueChange={() => {
+        style={styles.checkbox}
+        onClick={() => {
           setSelection(!isSelected);
           handleSelection(id, name, quantity, !isSelected);
         }}
-        style={styles.checkbox}
+        isChecked={isSelected}
       />
     </View>
   );

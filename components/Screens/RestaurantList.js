@@ -307,14 +307,24 @@ export default RestaurantList;
 
 const styles = StyleSheet.create({
   container: {
+    width: "100%",
     flex: 1,
     backgroundColor: "white",
+    justifyContent: "space-between",
   },
   headerConatiner: {
     paddingTop: Constants.statusBarHeight,
     backgroundColor: "#FF8000",
     borderBottomWidth: 0.15,
-    elevation: 8,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+
+    elevation: 3,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",
@@ -325,7 +335,7 @@ const styles = StyleSheet.create({
   searchInput: {
     backgroundColor: "white",
     fontSize: 15,
-    paddingVertical: 5,
+    paddingVertical: Platform.OS === "android" ? 5 : 10,
     paddingHorizontal: 15,
     borderRadius: 25,
     width: "70%",
@@ -351,7 +361,7 @@ const styles = StyleSheet.create({
   searchInput1: {
     backgroundColor: "white",
     fontSize: 12,
-    paddingVertical: 2,
+    paddingVertical: Platform.OS === "android" ? 2 : 6,
     paddingHorizontal: 15,
     borderRadius: 25,
     width: "60%",

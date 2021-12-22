@@ -48,10 +48,10 @@ export default function App() {
     });
   }, []);
 
-  const getOrdersData = () => {
+  const getOrdersData = (id) => {
     const array = [];
     db.collection("users")
-      .doc(auth.currentUser.uid)
+      .doc(id)
       .collection("orders")
       .orderBy("createdAt", "desc")
       .onSnapshot((querySnapshot) => {
@@ -62,11 +62,11 @@ export default function App() {
     setuserOrders(array);
   };
 
-  const getProfileData = () => {
+  const getProfileData = (id) => {
     // alert(auth.currentUser.uid);
 
     db.collection("users")
-      .doc(auth.currentUser.uid)
+      .doc(id)
       .onSnapshot((doc) => {
         setUserData(doc.data());
       });
@@ -74,8 +74,8 @@ export default function App() {
 
   useEffect(() => {
     if (login) {
-      getOrdersData();
-      getProfileData();
+      getOrdersData(login.uid);
+      getProfileData(login.uid);
     }
   }, [login]);
   return (

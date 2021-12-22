@@ -18,8 +18,11 @@ import { useNavigation } from "@react-navigation/native";
 
 const Profile = () => {
   const [userData] = useContext(UserData);
-  const [phoneNumber, setPhoneNumber] = useState(userData.phoneNo);
+  const [phoneNumber, setPhoneNumber] = useState("");
   const navigation = useNavigation();
+  useEffect(() => {
+    if (userData?.phoneNo) setPhoneNumber(userData?.phoneNo);
+  }, [userData]);
 
   return (
     <SafeAreaView style={[styles.container, { justifyContent: "center" }]}>

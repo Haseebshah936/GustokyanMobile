@@ -8,6 +8,7 @@ import {
   View,
   Linking,
   Alert,
+  Platform,
 } from "react-native";
 import { AirbnbRating, Rating } from "react-native-ratings";
 import { setDisabled } from "react-native/Libraries/LogBox/Data/LogBoxData";
@@ -142,19 +143,20 @@ export default function Resturant({
 const styles = StyleSheet.create({
   container: {
     width: "95%",
-    elevation: 0.5,
     borderRadius: 10,
     overflow: "hidden",
-    elevation: 5,
     backgroundColor: "white",
-    shadowColor: "grey",
+    shadowColor: "black",
     shadowOffset: {
-      width: 5,
-      height: 5,
+      width: 0,
+      height: 1,
     },
-    shadowOpacity: 0.5,
-    shadowRadius: 30,
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+
+    elevation: 3,
     margin: 10,
+    borderWidth: Platform.OS === "android" ? 0.1 : 0.2,
   },
   logo: {
     alignSelf: "center",

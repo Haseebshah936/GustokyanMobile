@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   TouchableHighlight,
+  SafeAreaView,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
@@ -59,7 +60,7 @@ function LoginForm({ navigation }) {
   };
 
   return (
-    <Pressable onPress={Keyboard.dismiss} style={styles.container}>
+    <SafeAreaView onPress={Keyboard.dismiss} style={styles.container}>
       <View style={styles.loginTextTopContainer}>
         <Text style={styles.loginText}>Login</Text>
       </View>
@@ -228,7 +229,7 @@ function LoginForm({ navigation }) {
         </Pressable>
       </Modal>
       <StatusBar style={"auto"} hidden />
-    </Pressable>
+    </SafeAreaView>
   );
 }
 

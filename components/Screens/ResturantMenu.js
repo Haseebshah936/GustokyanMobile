@@ -106,25 +106,6 @@ const ResturantMenu = () => {
               <View style={styles.totalContainer}>
                 <Text style={styles.textCart}>₱ {cart?.total}</Text>
               </View>
-              {/* <TouchableOpacity
-              activeOpacity={0.6}
-              onPress={() =>
-                Alert.alert(
-                  "Confirmation",
-                  "This action will make your cart empty.",
-                  [
-                    { text: "cancel" },
-                    {
-                      text: "OK",
-                      onPress: () =>
-                      setCart({ ...cart, products: [], total: 0 }),
-                    },
-                  ]
-                  )
-              }
-            >
-            <MaterialIcons name="delete" size={24} color="red" />
-            </TouchableOpacity> */}
             </View>
           </TouchableOpacity>
         ) : (
@@ -149,7 +130,7 @@ const styles = StyleSheet.create({
     color: "black",
   },
   placeOrder: {
-    backgroundColor: color.secondry,
+    backgroundColor: "#FF8600",
     alignItems: "center",
     padding: 10,
     paddingHorizontal: 20,

@@ -13,14 +13,15 @@ const stylesRegister = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
     backgroundColor: "white",
-    elevation: 20,
-    shadowColor: "grey",
-    shadowOpacity: 0.5,
-    shadowRadius: 1,
+    shadowColor: "#000",
     shadowOffset: {
-      width: 5,
-      height: 5,
+      width: 0,
+      height: 2,
     },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
     padding: 13,
   },
   loginInputContainer: {
@@ -176,13 +177,13 @@ const stylesRegister = StyleSheet.create({
     fontSize: 25,
     fontWeight: "bold",
     marginLeft: 5,
-    fontFamily: "monospace",
+    // fontFamily: "monospace",
   },
   signupText: {
     fontSize: 25,
     fontWeight: "bold",
     marginLeft: 5,
-    fontFamily: "monospace",
+    // fontFamily: "monospace",
     textDecorationLine: "underline",
   },
   profileContainer: {

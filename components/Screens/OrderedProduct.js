@@ -18,44 +18,47 @@ const OrderedProduct = ({
   return (
     <View style={styles.wrapper}>
       <View style={styles.container}>
-        <TouchableOpacity
-          style={styles.btn}
-          activeOpacity={0.6}
-          onPress={() => {
-            const cartProducts = cart?.products.filter((p) => p.id !== id);
-            let cost = 0;
-            extra.map((e) => (cost = cost + e.price * e.quantity));
-            const total = cart.total - price * quantity - cost;
-            setCart({ ...cart, products: cartProducts, total });
-            if (cartProducts.length === 0) {
-              navigation.goBack();
-            }
-          }}
-        >
-          <MaterialIcons name="delete" size={24} color="tomato" />
-        </TouchableOpacity>
-        <Text style={styles.name}>{productName}</Text>
+        <View style={styles.btn}>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            onPress={() => {
+              const cartProducts = cart?.products.filter((p) => p.id !== id);
+              let cost = 0;
+              extra.map((e) => (cost = cost + e.price * e.quantity));
+              const total = cart.total - price * quantity - cost;
+              setCart({ ...cart, products: cartProducts, total });
+              if (cartProducts.length === 0) {
+                navigation.goBack();
+              }
+            }}
+          >
+            <MaterialIcons name="delete" size={24} color="tomato" />
+          </TouchableOpacity>
+          <Text style={styles.name}>{productName}</Text>
+        </View>
         <Text style={styles.quantity}>{quantity}</Text>
         <Text style={styles.price}>
           {quantity === "Quantity"
             ? price.toFixed(2)
             : "₱ " + (quantity * price).toFixed(2)}
         </Text>
-        {img === "Image" ? (
+        {/* {img === "Image" ? (
           <Text style={styles.name}>{img}</Text>
         ) : (
           <Image
             style={styles.img}
             source={{ uri: img, width: "90%", height: 50 }}
           />
-        )}
+        )} */}
       </View>
       {extra.length !== 0 && <Text style={styles.heading}>Add-Ons</Text>}
       {extra.map((ex, i) => (
         <View style={styles.extras} key={i}>
-          <Text style={{ width: "25%" }}>{ex.name}</Text>
-          <Text>₱ {parseFloat(ex.price).toFixed(2)}</Text>
+          <Text style={{ width: "35%" }}>{ex.name}</Text>
           <Text>{ex.quantity}</Text>
+          <Text style={{ width: "20%" }}>
+            ₱ {parseFloat(ex.price).toFixed(2)}
+          </Text>
         </View>
       ))}
     </View>
@@ -74,10 +77,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: 5,
+    padding: 10,
   },
   btn: {
-    flex: 1,
+    flexDirection: "row",
+    width: "35%",
   },
   img: {
     flex: 1,
@@ -85,20 +89,24 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   name: {
-    flex: 1.5,
+    // flex: 1,
     color: "black",
     alignSelf: "center",
     fontWeight: "bold",
+    fontSize: 16,
+    marginLeft: 10,
   },
   quantity: {
     alignSelf: "center",
-    flex: 0.5,
+    // flex: 1,
     color: "black",
+    justifyContent: "flex-end",
   },
   price: {
     alignSelf: "center",
-    flex: 1,
+    // flex: 1,
     color: "black",
+    width: "20%",
   },
   extras: {
     flexDirection: "row",

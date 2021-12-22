@@ -13,6 +13,7 @@ import {
   TouchableHighlight,
   TouchableOpacity,
   ImagePickerIOS,
+  SafeAreaView,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
@@ -85,7 +86,7 @@ function RegisterForm({ navigation }) {
       });
   };
   return (
-    <Pressable onPress={() => Keyboard.dismiss()} style={styles.container}>
+    <SafeAreaView onPress={() => Keyboard.dismiss()} style={styles.container}>
       <>
         <View style={styles.loginTextTopContainer}>
           <Text style={styles.loginText}>Sign Up</Text>
@@ -274,7 +275,7 @@ function RegisterForm({ navigation }) {
         </View>
       </>
       <StatusBar style={"auto"} hidden />
-    </Pressable>
+    </SafeAreaView>
   );
 }
 
