@@ -81,7 +81,7 @@ const ResturantMenu = () => {
               <Product
                 id={item.id}
                 image={item.image}
-                price={item.price}
+                price={parseFloat(item.price).toFixed(2)}
                 productName={item.productName}
                 extras={item?.extras}
                 details={item?.details}
@@ -99,7 +99,7 @@ const ResturantMenu = () => {
           <TouchableOpacity
             style={styles.placeOrder}
             activeOpacity={0.6}
-            onPress={() => navigation.navigate("placeOrder")}
+            onPress={() => navigation.navigate("Place Order")}
           >
             <Text style={styles.text}>Place Order</Text>
             <View style={styles.subContainer}>

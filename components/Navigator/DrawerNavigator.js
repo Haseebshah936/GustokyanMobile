@@ -9,6 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 import { LoginContext } from "../../App";
 import ResturantStackNavigator from "./ResturantStackNavigator";
 import { auth } from "../../Config/Firebase";
+import FAQs from "../Screens/FAQs";
 
 const Drawer = createDrawerNavigator();
 
@@ -28,6 +29,7 @@ export default function DrawerNavigator() {
       }}
     >
       <Drawer.Screen name="Home" component={ResturantStackNavigator} />
+      <Drawer.Screen name="FAQs" component={FAQs} />
     </Drawer.Navigator>
   );
 }

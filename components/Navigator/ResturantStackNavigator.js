@@ -5,13 +5,15 @@ import MenuAndReviewNavigator from "./MenuAndReviewNavigator";
 import { ResturantIdContext } from "../../App";
 import OrderView from "../Screens/OrderView";
 import PlaceOrder from "../Screens/PlaceOrder";
+import OrderScreen from "../Screens/OrderScreen";
+import Profile from "../Screens/Profile";
 
 const Stack = createStackNavigator();
 
 function ResturantStackNavigator(props) {
   const [id] = useContext(ResturantIdContext);
   return (
-    <Stack.Navigator mode={"modal"}>
+    <Stack.Navigator mode={"modal"} initialRouteName="Main">
       <Stack.Screen
         options={{ headerShown: false }}
         name="Main"
@@ -22,8 +24,10 @@ function ResturantStackNavigator(props) {
         name="Menu"
         component={MenuAndReviewNavigator}
       />
-      <Stack.Screen name="orderView" component={OrderView} />
-      <Stack.Screen name="placeOrder" component={PlaceOrder} />
+      <Stack.Screen name="Customize Order" component={OrderView} />
+      <Stack.Screen name="Place Order" component={PlaceOrder} />
+      <Stack.Screen name="Orders" component={OrderScreen} />
+      <Stack.Screen name="Profile" component={Profile} />
     </Stack.Navigator>
   );
 }

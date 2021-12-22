@@ -9,8 +9,8 @@ const OrderedProduct = ({
   id = "",
   productName = "Product",
   img = "Image",
-  quantity = "Quantity",
-  price = "Price",
+  quantity = 1,
+  price = 0,
   extra = [],
 }) => {
   const [cart, setCart] = useContext(CartContext);
@@ -37,7 +37,9 @@ const OrderedProduct = ({
         <Text style={styles.name}>{productName}</Text>
         <Text style={styles.quantity}>{quantity}</Text>
         <Text style={styles.price}>
-          {quantity === "Quantity" ? price : "₱ " + quantity * price}
+          {quantity === "Quantity"
+            ? price.toFixed(2)
+            : "₱ " + (quantity * price).toFixed(2)}
         </Text>
         {img === "Image" ? (
           <Text style={styles.name}>{img}</Text>
@@ -48,11 +50,11 @@ const OrderedProduct = ({
           />
         )}
       </View>
-      {extra.length !== 0 && <Text style={styles.heading}>Extras</Text>}
+      {extra.length !== 0 && <Text style={styles.heading}>Add-Ons</Text>}
       {extra.map((ex, i) => (
         <View style={styles.extras} key={i}>
           <Text style={{ width: "25%" }}>{ex.name}</Text>
-          <Text>₱ {ex.price}</Text>
+          <Text>₱ {parseFloat(ex.price).toFixed(2)}</Text>
           <Text>{ex.quantity}</Text>
         </View>
       ))}

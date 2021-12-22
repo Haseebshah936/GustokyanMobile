@@ -25,7 +25,7 @@ const PlaceOrder = () => {
       />
       <View style={styles.total}>
         <Text style={styles.text}>Total</Text>
-        <Text style={styles.text}>₱ {cart?.total}</Text>
+        <Text style={styles.text}>₱ {cart?.total.toFixed(2)}</Text>
       </View>
     </View>
   );

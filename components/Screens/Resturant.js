@@ -76,17 +76,64 @@ export default function Resturant({
         />
       </TouchableOpacity>
       <View style={styles.subContainer}>
-        <View style={{ alignItems: "flex-start" }}>
+        <View style={{ width: "45%", alignItems: "flex-start" }}>
           <Text style={styles.resturnatName}>{ResturantName}</Text>
           <Rating readonly startingValue={rating} imageSize={15} />
         </View>
-        <TouchableOpacity
-          style={styles.locationBtn}
-          activeOpacity={0.6}
-          onPress={() => Linking.openURL(location)}
-        >
-          <Text style={styles.locationText}>Open Location in Maps</Text>
-        </TouchableOpacity>
+        <View style={styles.buttons}>
+          <TouchableOpacity
+            style={styles.menuBtn}
+            activeOpacity={0.6}
+            onPress={() => {
+              if (
+                cart?.id !== id &&
+                cart?.id !== "" &&
+                cart?.products.length !== 0
+              ) {
+                Alert.alert(
+                  "Confirmation",
+                  "All the item in the cart will be removed",
+                  [
+                    { text: "cancel" },
+                    {
+                      text: "OK",
+                      onPress: () => {
+                        navigation.navigate("Menu");
+                        setRID({ id, ResturantName });
+                        setCart({ id, products: [], total: 0 });
+                        setCategory(
+                          categories.map((c) => ({
+                            label: c,
+                            value: c,
+                          }))
+                        );
+                      },
+                    },
+                  ]
+                );
+              } else {
+                navigation.navigate("Menu");
+                setCategory(
+                  categories.map((c, i) => ({
+                    label: c,
+                    value: c,
+                  }))
+                );
+                setRID({ id, ResturantName });
+                setCart({ ...cart, id });
+              }
+            }}
+          >
+            <Text style={styles.locationText}>MENU</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.locationBtn}
+            activeOpacity={0.6}
+            onPress={() => Linking.openURL(location)}
+          >
+            <Text style={styles.locationText}>MAP</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -124,14 +171,26 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginBottom: 2,
   },
+  menuBtn: {
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    backgroundColor: "#47AB74",
+    borderRadius: 40,
+    margin: 5,
+  },
   locationBtn: {
     paddingVertical: 12,
-    paddingHorizontal: 15,
-    backgroundColor: color.primary,
-    borderRadius: 10,
+    paddingHorizontal: 25,
+    backgroundColor: "#FF7519",
+    borderRadius: 40,
+    margin: 5,
   },
   locationText: {
     color: "white",
     fontWeight: "bold",
+    fontSize: 13,
+  },
+  buttons: {
+    flexDirection: "row",
   },
 });

@@ -11,6 +11,7 @@ import {
   View,
   ActivityIndicator,
   Text,
+  Image,
 } from "react-native";
 import { LoginContext } from "../../App";
 import color from "../Style/color";
@@ -21,7 +22,9 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { db } from "../../Config/Firebase";
 import { set } from "react-native-reanimated";
-
+import { borderColor } from "react-native/Libraries/Components/View/ReactNativeStyleAttributes";
+import { EvilIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 const data1 = [
   {
     resturnat: "Food on Way",
@@ -56,11 +59,12 @@ const RestaurantList = () => {
   const [loaded, setLoaded] = useState(false);
   const [data, setData] = useState([]);
   const [searchables, setSearchables] = useState([]);
-  const [limit, setLimit] = useState(4);
+  const [limit, setLimit] = useState(10);
   const [reload, setReload] = useState(false);
   const [again, setAgain] = useState(true);
   const [city, setCity] = useState("");
   const [noData, setNoData] = useState(false);
+  const [resturantName, setresturantName] = useState("");
 
   const fetchData = async () => {
     let array = [];
@@ -110,30 +114,75 @@ const RestaurantList = () => {
     let array = [];
     setLoaded(false);
     setNoData(false);
-    db.collection("merchants")
-      .where("city", "==", city.toLowerCase())
-      .limit(limit)
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          array.push(doc.data());
+    if (city !== "" && resturantName !== "") {
+      db.collection("merchants")
+        .where("city", "==", city.toLowerCase())
+        .where("resturantName", "==", resturantName)
+        .limit(limit)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            array.push(doc.data());
+          });
+        })
+        .then(() => {
+          setData(array);
+          setLoaded(true);
+          if (array.length === 0) {
+            setData([]);
+            setNoData(true);
+          }
+        })
+        .catch((error) => {
+          console.log("Error getting documents: ", error);
         });
-      })
-      .then(() => {
-        setData(array);
-        setLoaded(true);
-        if (array.length === 0) {
-          setData([]);
-          setNoData(true);
-        }
-      })
-      .catch((error) => {
-        console.log("Error getting documents: ", error);
-      });
+    } else if (city !== "") {
+      db.collection("merchants")
+        .where("city", "==", city.toLowerCase())
+        .limit(limit)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            array.push(doc.data());
+          });
+        })
+        .then(() => {
+          setData(array);
+          setLoaded(true);
+          if (array.length === 0) {
+            setData([]);
+            setNoData(true);
+          }
+        })
+        .catch((error) => {
+          console.log("Error getting documents: ", error);
+        });
+    } else {
+      db.collection("merchants")
+        .where("resturantName", "==", resturantName)
+        .limit(limit)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            array.push(doc.data());
+          });
+        })
+        .then(() => {
+          setData(array);
+          setLoaded(true);
+          if (array.length === 0) {
+            setData([]);
+            setNoData(true);
+          }
+        })
+        .catch((error) => {
+          console.log("Error getting documents: ", error);
+        });
+    }
   };
 
   useEffect(() => {
-    if (city !== "") {
+    if (city !== "" || resturantName !== "") {
       searchByCity();
     } else {
       fetchData();
@@ -149,15 +198,15 @@ const RestaurantList = () => {
           <Octicons name="three-bars" size={24} color="black" />
         </TouchableOpacity>
         <TextInput
-          value={city}
-          onChangeText={(text) => setCity(text)}
-          placeholder="Search by city"
+          value={resturantName}
+          onChangeText={(text) => setresturantName(text)}
+          placeholder="Search Resturant"
           style={styles.searchInput}
         />
         <TouchableOpacity activeOpacity={0.5}>
           <MaterialIcons
             onPress={() => {
-              setLimit(4);
+              setLimit(10);
               setData([]);
               setAgain(!again);
             }}
@@ -190,11 +239,12 @@ const RestaurantList = () => {
             setData(searchables);
             setAgain(!again);
             setCity("");
-            setLimit(4);
+            setresturantName("");
+            setLimit(10);
           }}
           initialNumToRender={1}
           onEndReached={() => {
-            data.length >= limit && setLimit(limit + 4);
+            data.length >= limit && setLimit(limit + 10);
           }}
           onEndReachedThreshold={0.01}
         />
@@ -216,6 +266,38 @@ const RestaurantList = () => {
         color={color.primary}
         onPress={() => setLogin(false)}
       /> */}
+      <View style={styles.headerConatiner1}>
+        <TouchableOpacity
+          activeOpacity={0.5}
+          onPress={() => navigation.navigate("Profile")}
+        >
+          <Ionicons name="person-circle-outline" size={32} color="black" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={0.5}
+          onPress={() => navigation.navigate("Orders")}
+        >
+          <EvilIcons name="bell" size={32} color="black" />
+        </TouchableOpacity>
+        <TextInput
+          value={city}
+          onChangeText={(text) => setCity(text)}
+          placeholder="Search City"
+          style={styles.searchInput1}
+        />
+        <TouchableOpacity activeOpacity={0.5}>
+          <MaterialIcons
+            onPress={() => {
+              setLimit(10);
+              setData([]);
+              setAgain(!again);
+            }}
+            name="search"
+            size={26}
+            color="black"
+          />
+        </TouchableOpacity>
+      </View>
       <StatusBar style={"dark"} hidden />
     </SafeAreaView>
   );
@@ -230,20 +312,18 @@ const styles = StyleSheet.create({
   },
   headerConatiner: {
     paddingTop: Constants.statusBarHeight,
-    backgroundColor: "white",
+    backgroundColor: "#FF8000",
     borderBottomWidth: 0.15,
     elevation: 8,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",
     paddingHorizontal: 10,
+    paddingVertical: 8,
   },
 
   searchInput: {
     backgroundColor: "white",
-    borderWidth: 0.3,
-    marginVertical: 5,
-    marginBottom: 12,
     fontSize: 15,
     paddingVertical: 5,
     paddingHorizontal: 15,
@@ -256,5 +336,32 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     flex: 1,
     color: "black",
+  },
+  headerConatiner1: {
+    backgroundColor: "#A9A9A9",
+    borderBottomWidth: 0.15,
+    elevation: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+  },
+
+  searchInput1: {
+    backgroundColor: "white",
+    fontSize: 12,
+    paddingVertical: 2,
+    paddingHorizontal: 15,
+    borderRadius: 25,
+    width: "60%",
+    color: "black",
+  },
+  profile: {
+    padding: 5,
+    borderWidth: 0.1,
+    borderColor: "lightgray",
+    height: 40,
+    width: 40,
   },
 });

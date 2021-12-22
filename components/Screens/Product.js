@@ -39,7 +39,7 @@ export default function Product({
           style={styles.locationBtn}
           activeOpacity={0.6}
           onPress={() =>
-            navigation.navigate("orderView", {
+            navigation.navigate("Customize Order", {
               image,
               price,
               productName,
@@ -49,7 +49,7 @@ export default function Product({
             })
           }
         >
-          <Text style={styles.locationText}>Select</Text>
+          <Text style={styles.locationText}>GustoKoYan</Text>
         </TouchableOpacity>
       </View>
     </View>

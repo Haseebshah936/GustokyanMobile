@@ -34,6 +34,7 @@ const validationSchema = Yup.object().shape({
   userName: Yup.string().required().label("User Name"),
   email: Yup.string().required().email().label("Email"),
   password: Yup.string().required().min(8).label("Password"),
+  phoneNo: Yup.string().required().label("Phone No"),
 });
 
 const hold =
@@ -53,7 +54,7 @@ function RegisterForm({ navigation }) {
     return "../../assets/holder.png";
   };
 
-  const handleSubmit = (email, userName, password) => {
+  const handleSubmit = (email, userName, password, phoneNo) => {
     auth
       .createUserWithEmailAndPassword(email, password)
       .then((userCredential) => {
@@ -66,6 +67,8 @@ function RegisterForm({ navigation }) {
               photo: url,
               createdAt: firebase.firestore.FieldValue.serverTimestamp(),
               id,
+              phoneNo,
+              email,
             })
             .then(() => {
               console.log("Document successfully written!");
@@ -93,9 +96,15 @@ function RegisterForm({ navigation }) {
               userName: "",
               email: "",
               password: "",
+              phoneNo: "",
             }}
             onSubmit={(values) => {
-              handleSubmit(values.email, values.userName, values.password);
+              handleSubmit(
+                values.email,
+                values.userName,
+                values.password,
+                values.phoneNo
+              );
             }}
             validationSchema={validationSchema}
           >
@@ -174,7 +183,28 @@ function RegisterForm({ navigation }) {
                       />
                     </View>
                   </View>
-
+                  <View style={styles.loginInputContainer}>
+                    <Ionicons
+                      style={styles.icon}
+                      name="call-outline"
+                      size={22}
+                      color="black"
+                    />
+                    <TextInput
+                      onChangeText={handleChange("phoneNo")}
+                      style={styles.loginInput}
+                      placeholder={"Phone Number"}
+                      autoCompleteType="tel"
+                      textContentType="telephoneNumber"
+                      clearButtonMode="always"
+                      keyboardType={"phone-pad"}
+                      onBlur={() => setFieldTouched("phoneNo")}
+                    />
+                  </View>
+                  <ErrorMessage
+                    error={errors.phoneNo}
+                    visible={touched.phoneNo}
+                  />
                   <View style={styles.loginInputContainer}>
                     <Ionicons
                       style={styles.icon}

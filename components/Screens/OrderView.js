@@ -37,7 +37,9 @@ const OrderView = () => {
           <View style={styles.subInternalContainer}>
             <Image style={styles.image} source={{ uri: image }} />
             <View style={styles.textContainer}>
-              <Text>{productName}</Text>
+              <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                {productName}
+              </Text>
               <Text>₱ {price}</Text>
             </View>
           </View>
@@ -65,11 +67,11 @@ const OrderView = () => {
             </Text>
           </View>
         </View>
-        <Text style={styles.detailHeading}>Details</Text>
+        <Text style={styles.detailHeading}>Item Details</Text>
         <ScrollView style={styles.details}>
           <Text>{details}</Text>
         </ScrollView>
-        <Text style={styles.extrasHeading}>Extras</Text>
+        <Text style={styles.extrasHeading}>Add-Ons:</Text>
         {extras.map((extra, index) => (
           <Extra
             id={index}
@@ -102,10 +104,10 @@ const OrderView = () => {
           }
         }}
       >
-        <Text style={styles.add}>Add to Cart</Text>
+        <Text style={styles.add}>Add to Order</Text>
         <View style={styles.totalContainer}>
           <Text style={styles.textCart}>
-            ₱ {price * quantity + extrasPrice}
+            ₱ {(price * quantity + extrasPrice).toFixed(2)}
           </Text>
         </View>
       </TouchableOpacity>
@@ -145,6 +147,7 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     justifyContent: "space-between",
+    width: "50%",
   },
   quantity: {
     flexDirection: "row",
@@ -156,18 +159,18 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   text: {
-    color: "black",
+    color: "white",
     fontSize: 15,
     fontWeight: "bold",
   },
   textSub: {
-    color: "black",
+    color: "white",
     opacity: 0.8,
     fontSize: 30,
   },
   textAdd: {
     opacity: 0.8,
-    color: "black",
+    color: "white",
     fontSize: 20,
   },
   addToCart: {
@@ -175,7 +178,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingVertical: 8,
-    backgroundColor: color.secondry,
+    backgroundColor: "#FF8600",
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5,
     alignItems: "center",
@@ -186,7 +189,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   textCart: {
-    color: "tomato",
+    color: "#FF8600",
     fontWeight: "bold",
     fontSize: 16,
   },
@@ -199,8 +202,11 @@ const styles = StyleSheet.create({
   },
   detailHeading: {
     margin: 5,
+    marginHorizontal: 15,
     marginBottom: 0,
     fontWeight: "bold",
+    fontSize: 18,
+    color: "#FF8600",
   },
   extrasHeading: {
     margin: 5,

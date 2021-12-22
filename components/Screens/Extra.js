@@ -64,18 +64,18 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   text: {
-    color: "black",
+    color: "white",
     fontSize: 15,
     fontWeight: "bold",
   },
   textSub: {
-    color: "black",
+    color: "white",
     opacity: 0.8,
     fontSize: 30,
   },
   textAdd: {
     opacity: 0.8,
-    color: "black",
+    color: "white",
     fontSize: 20,
   },
   checkbox: {

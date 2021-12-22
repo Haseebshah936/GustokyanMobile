@@ -4,13 +4,15 @@ import { NavigationContainer } from "@react-navigation/native";
 import LoginNavigator from "./components/Navigator/LoginNavigator";
 import { LogBox } from "react-native";
 import LoginForm from "./components/Login/LoginForm";
-import { auth } from "./Config/Firebase";
+import { auth, db } from "./Config/Firebase";
 import { set } from "react-native-reanimated";
+import { array } from "yup";
 
 export const LoginContext = createContext(false);
 export const ResturantIdContext = createContext("");
 export const CartContext = createContext({});
 export const Categories = createContext([]);
+export const UserData = createContext([]);
 
 export default function App() {
   LogBox.ignoreLogs([
@@ -21,6 +23,9 @@ export default function App() {
   const [rid, setRID] = useState();
   const [cart, setCart] = useState({ id: "", products: [], total: 0 });
   const [categories, setCategories] = useState([]);
+  const [userData, setUserData] = useState({});
+  const [userOrders, setuserOrders] = useState([]);
+
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (user) {
@@ -42,16 +47,51 @@ export default function App() {
       }
     });
   }, []);
+
+  const getOrdersData = () => {
+    const array = [];
+    db.collection("users")
+      .doc(auth.currentUser.uid)
+      .collection("orders")
+      .orderBy("createdAt", "desc")
+      .onSnapshot((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          array.push(doc.data());
+        });
+      });
+    setuserOrders(array);
+  };
+
+  const getProfileData = () => {
+    // alert(auth.currentUser.uid);
+
+    db.collection("users")
+      .doc(auth.currentUser.uid)
+      .onSnapshot((doc) => {
+        setUserData(doc.data());
+      });
+  };
+
+  useEffect(() => {
+    if (login) {
+      getOrdersData();
+      getProfileData();
+    }
+  }, [login]);
   return (
     <LoginContext.Provider value={[login, setLogin]}>
       <ResturantIdContext.Provider value={[rid, setRID]}>
-        <CartContext.Provider value={[cart, setCart]}>
-          <Categories.Provider value={[categories, setCategories]}>
-            <NavigationContainer>
-              <LoginNavigator />
-            </NavigationContainer>
-          </Categories.Provider>
-        </CartContext.Provider>
+        <UserData.Provider
+          value={[userData, setUserData, userOrders, setuserOrders]}
+        >
+          <CartContext.Provider value={[cart, setCart]}>
+            <Categories.Provider value={[categories, setCategories]}>
+              <NavigationContainer>
+                <LoginNavigator />
+              </NavigationContainer>
+            </Categories.Provider>
+          </CartContext.Provider>
+        </UserData.Provider>
       </ResturantIdContext.Provider>
       {/* <LoginForm /> */}
     </LoginContext.Provider>
